@@ -54,7 +54,7 @@ async def log_to_sheet(update: Update, context: ContextTypes.DEFAULT_TYPE):
             if re.match(r"^CS\d+-\d+\w*$", first):
                 ma_phieu = first
                 thoigian_hoanthanh = second
-            elif re.match(r"^\W+$", first):
+            elif re.match(r"^[a-zA-Z0-9]+$", first):
                 # Trường hợp: xxxx yy
                 ma_phieu = f"CS286-{short_year}{month_day}{first}"
                 thoigian_hoanthanh = second
@@ -69,7 +69,7 @@ async def log_to_sheet(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 ma_phieu = only
                 thoigian_hoanthanh = ''
 
-            elif re.match(r"^\W+$", only):
+            elif re.match(r"^[a-zA-Z0-9]+$", only):
                 # Trường hợp: xxxx
                 ma_phieu = f"CS286-{short_year}{month_day}{only}"
                 thoigian_hoanthanh = ''
