@@ -110,5 +110,7 @@ app.add_handler(MessageHandler(filters.TEXT & (~filters.ChatType.PRIVATE), log_t
 app.add_handler(MessageHandler(~filters.TEXT, ignore_non_text))
 
 print("Bot đang chạy...")
-app.run_polling()
+
+    if __name__ == "__main__":
+        app.run_polling()
 
