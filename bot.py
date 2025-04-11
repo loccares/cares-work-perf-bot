@@ -15,7 +15,6 @@ scope = [
     'https://www.googleapis.com/auth/drive'
 ]
 
-
 if "GOOGLE_CREDS_JSON" not in os.environ:
     with open("credentials.json") as f:
         os.environ["GOOGLE_CREDS_JSON"] = f.read()
@@ -30,12 +29,21 @@ sheet = client.open("Work Performance").sheet1  # Tên Sheet
 # Token bot Telegram
 TOKEN = "7969806613:AAG03Moin58c0_CixWvlnC_yhAGbWG74XFs"
 
+def is_within_active_hours():
+    now = datetime.now().hour
+    return 8 <= now < 20  # hoạt động từ 08:00 đến 19:59
+
 async def log_to_sheet(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     user = update.effective_user
     message = update.message
     chat = update.effective_chat
     raw_text = message.text.strip()
+
+    # 🔒 Kiểm tra giờ hoạt động
+    if not is_within_active_hours():
+        await update.message.reply_text("Ngoài giờ làm việc rồi nha! Bot chỉ hoạt động từ 08:00 đến 20:00.")
+        return
     
     ma_phieu = ''
     thoigian_hoanthanh = ''
