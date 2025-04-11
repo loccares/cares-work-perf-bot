@@ -31,7 +31,7 @@ TOKEN = "7969806613:AAG03Moin58c0_CixWvlnC_yhAGbWG74XFs"
 
 def is_within_active_hours():
     now = datetime.now().hour
-    return 8 <= now < 20  # hoạt động từ 08:00 đến 19:59
+    return 8 <= now < 21  # hoạt động từ 08:00 đến 19:59
 
 async def log_to_sheet(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
