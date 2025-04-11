@@ -15,6 +15,11 @@ scope = [
     'https://www.googleapis.com/auth/drive'
 ]
 
+
+if "GOOGLE_CREDS_JSON" not in os.environ:
+    with open("credentials.json") as f:
+        os.environ["GOOGLE_CREDS_JSON"] = f.read()
+
 creds_dict = json.loads(os.environ["GOOGLE_CREDS_JSON"])
 creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
 
