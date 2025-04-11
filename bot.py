@@ -1,5 +1,7 @@
 import re
 import gspread
+import json
+import 
 
 from telegram import Update
 from datetime import datetime
@@ -8,11 +10,14 @@ from oauth2client.service_account import ServiceAccountCredentials
 from telegram.ext import ApplicationBuilder, MessageHandler, ContextTypes, filters
 
 # Kết nối Google Sheets
-scope = [
+scope = [os
     'https://www.googleapis.com/auth/spreadsheets',
     'https://www.googleapis.com/auth/drive'
 ]
-creds = ServiceAccountCredentials.from_json_keyfile_name("credentials.json", scopes = scope)
+
+creds_dict = json.loads(os.environ["GOOGLE_CREDS_JSON"])
+creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
+
 client = gspread.authorize(creds)
 
 sheet = client.open("Work Performance").sheet1  # Tên Sheet
