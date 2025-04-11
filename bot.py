@@ -10,7 +10,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 from telegram.ext import ApplicationBuilder, MessageHandler, ContextTypes, filters
 
 # Kết nối Google Sheets
-scope = [os
+scope = [
     'https://www.googleapis.com/auth/spreadsheets',
     'https://www.googleapis.com/auth/drive'
 ]
