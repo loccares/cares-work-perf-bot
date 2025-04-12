@@ -133,6 +133,7 @@ async def main():
     await app.updater.start_polling()
 
     await start_web_server()
+    print(f"🚀 Web server is running on port {os.environ.get('PORT', 10000)}")
 
     #Giữ bot chạy
     while True:
