@@ -2,9 +2,12 @@ import re
 import gspread
 import json
 import os
+import asyncio
 
 from telegram import Update
 from datetime import datetime
+
+from aiohttp import web
 
 from oauth2client.service_account import ServiceAccountCredentials
 from telegram.ext import ApplicationBuilder, MessageHandler, ContextTypes, filters
@@ -21,13 +24,13 @@ if "GOOGLE_CREDS_JSON" not in os.environ:
 
 creds_dict = json.loads(os.environ["GOOGLE_CREDS_JSON"])
 creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
-
 client = gspread.authorize(creds)
 
 sheet = client.open("Work Performance").sheet1  # Tên Sheet
 
 # Token bot Telegram
 TOKEN = "7969806613:AAG03Moin58c0_CixWvlnC_yhAGbWG74XFs"
+app = ApplicationBuilder().token(TOKEN).build()
 
 def is_within_active_hours():
     now = datetime.now().hour
@@ -112,11 +115,30 @@ async def log_to_sheet(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def ignore_non_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
     return;
 
-app = ApplicationBuilder().token(TOKEN).build()
 
 app.add_handler(MessageHandler(filters.TEXT & (~filters.ChatType.PRIVATE), log_to_sheet))
 app.add_handler(MessageHandler(~filters.TEXT, ignore_non_text))
 
-print("Bot đang chạy...")
-app.run_polling()
+async def index(request):
+    return web.Response(text="Bot is running!")
+
+async def start_web_server():
+    runner = web.AppRunner(web.Application())
+    app_http = web.Application()
+    app_http.rounter.add_get("/", index)
+    runner = web.AppRunner(app_http)
+    await runner.setup()
+    site = web,TCPSite(runner, "0.0.0.0", int(os.environ.get("PORT", 10000)))
+    await site.start()
+
+async def main():
+    await asyncio.gather(
+        app.run_polling(),
+        start_web_server()
+    )
+
+if __name__ == '__main__':
+    asyncio.run(main())
+
+
 
