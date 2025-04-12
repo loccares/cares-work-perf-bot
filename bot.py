@@ -121,10 +121,10 @@ async def index(request):
 
 async def start_web_server():
     app_http = web.Application()
-    app_http.rounter.add_get("/", index)
+    app_http.router.add_get("/", index)
     runner = web.AppRunner(app_http)
     await runner.setup()
-    site = web,TCPSite(runner, "0.0.0.0", int(os.environ.get("PORT", 10000)))
+    site = web.TCPSite(runner, "0.0.0.0", int(os.environ.get("PORT", 10000)))
     await site.start()
 
 async def main():
@@ -136,8 +136,14 @@ async def main():
     print(f"🚀 Web server is running on port {os.environ.get('PORT', 10000)}")
 
     #Giữ bot chạy
-    while True:
-        await asyncio.sleep(3600)
+    try:
+        while True:
+            await asyncio.sleep(3600)
+    except (KeyboardInterrupt, SystemExit):
+        print("Shutting down...")
+        await app.updater.stop()
+        await app.stop()
+        await app.shutdown()
 
 if __name__ == '__main__':
     asyncio.run(main())
