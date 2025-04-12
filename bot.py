@@ -52,8 +52,9 @@ async def log_to_sheet(update: Update, context: ContextTypes.DEFAULT_TYPE):
     thoigian_hoanthanh = ''
 
     try:
-        vn_tz = pytz.timezone('Asia/Ho_Chi_Minh')
-        today = datetime.now(vn_tz)
+        #vn_tz = pytz.timezone('Asia/Ho_Chi_Minh')
+        #today = datetime.now(vn_tz)
+        today = datetime.now()
         short_year = today.strftime('%y')
         month_day = today.strftime('%m%d')
         parts = raw_text.split()
