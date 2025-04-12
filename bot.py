@@ -3,6 +3,7 @@ import gspread
 import json
 import os
 import asyncio
+import pytz
 
 from telegram import Update
 from datetime import datetime
@@ -32,7 +33,8 @@ TOKEN = "7969806613:AAG03Moin58c0_CixWvlnC_yhAGbWG74XFs"
 app = ApplicationBuilder().token(TOKEN).build()
 
 def is_within_active_hours():
-    now = datetime.now().hour
+    vn_tz = pytz.timezone('Asia/Ho_Chi_Minh')
+    now = datetime.now(vn_tz).hour
     return 8 <= now < 21  # hoạt động từ 08:00 đến 20:59
 
 async def log_to_sheet(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -50,7 +52,8 @@ async def log_to_sheet(update: Update, context: ContextTypes.DEFAULT_TYPE):
     thoigian_hoanthanh = ''
 
     try:
-        today = datetime.now()
+        vn_tz = pytz.timezone('Asia/Ho_Chi_Minh')
+        today = datetime.now(vn_tz)
         short_year = today.strftime('%y')
         month_day = today.strftime('%m%d')
         parts = raw_text.split()
