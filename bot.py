@@ -8,7 +8,6 @@ from telegram import Update
 from datetime import datetime
 
 from aiohttp import web
-
 from oauth2client.service_account import ServiceAccountCredentials
 from telegram.ext import ApplicationBuilder, MessageHandler, ContextTypes, filters
 
@@ -37,10 +36,9 @@ def is_within_active_hours():
     return 8 <= now < 21  # hoạt động từ 08:00 đến 20:59
 
 async def log_to_sheet(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    
     user = update.effective_user
     message = update.message
-    chat = update.effective_chat
+    #chat = update.effective_chat
     raw_text = message.text.strip()
 
     # 🔒 Kiểm tra giờ hoạt động
@@ -55,7 +53,6 @@ async def log_to_sheet(update: Update, context: ContextTypes.DEFAULT_TYPE):
         today = datetime.now()
         short_year = today.strftime('%y')
         month_day = today.strftime('%m%d')
-
         parts = raw_text.split()
 
         if len(parts) == 2:
@@ -123,7 +120,6 @@ async def index(request):
     return web.Response(text="Bot is running!")
 
 async def start_web_server():
-    runner = web.AppRunner(web.Application())
     app_http = web.Application()
     app_http.rounter.add_get("/", index)
     runner = web.AppRunner(app_http)
@@ -132,10 +128,15 @@ async def start_web_server():
     await site.start()
 
 async def main():
-    await asyncio.gather(
-        app.run_polling(),
-        start_web_server()
-    )
+    await app.initialize()
+    await app.start()
+    await app.updater.start_polling()
+
+    await start_web_server()
+
+    #Giữ bot chạy
+    while True:
+        await asyncio.sleep(3600)
 
 if __name__ == '__main__':
     asyncio.run(main())
